@@ -4,16 +4,22 @@ const chaiHttp = require("chai-http");
 const server = require("../index");
 const userModel = require("../models/UsersModel");
 const followModel = require("../models/FollowModel");
+const creds = require("../userCreds/creds.json");
+
+const idIndex = creds.length;
+const email = creds[idIndex - 2].email;
+const password = creds[idIndex - 2].password;
+const wrongPassword = "12345";
 
 chai.should();
 
 chai.use(chaiHttp);
 
 const removeIfFollow = async() => {
-    const id = 5;
+    const id = idIndex;
     const index = id - 1;
     const id_of_user = (
-        await userModel.find({ email: "hickey.public@xyz.com" })
+        await userModel.find({ email: email })
     )[0]._id;
     const id_of_Follow_User = (await userModel.find({}))[index]._id;
 
@@ -37,8 +43,8 @@ describe("Authentication", () => {
                 .post("/api/authenticate")
                 .set("content-type", "application/json")
                 .send({
-                    email: "hickey.public@xyz.com",
-                    password: "public",
+                    email: email,
+                    password: password,
                 })
                 .end((err, res) => {
                     if (err) {
@@ -62,8 +68,8 @@ describe("Authentication", () => {
                 .post("/api/authenticate")
                 .set("content-type", "application/json")
                 .send({
-                    email: "hickey.public@xyz.com",
-                    password: "12345",
+                    email: email,
+                    password: wrongPassword,
                 })
                 .end((err, res) => {
                     if (err) {
@@ -97,13 +103,13 @@ describe("Follow and unfollow", () => {
                 .post("/api/authenticate")
                 .set("content-type", "application/json")
                 .send({
-                    email: "hickey.public@xyz.com",
-                    password: "public",
+                    email: email,
+                    password: password,
                 })
                 .then((res) => {
                     chai
                         .request(server)
-                        .post("/api/follow/5")
+                        .post("/api/follow/" + idIndex)
                         .set("content-type", "application/json")
                         .set("Authorization", "Bearer " + res.body.accessToken)
                         .end((err, res) => {
@@ -131,13 +137,13 @@ describe("Follow and unfollow", () => {
                 .post("/api/authenticate")
                 .set("content-type", "application/json")
                 .send({
-                    email: "hickey.public@xyz.com",
-                    password: "public",
+                    email: email,
+                    password: password,
                 })
                 .then((res) => {
                     chai
                         .request(server)
-                        .post("/api/follow/5")
+                        .post("/api/follow/" + idIndex)
                         .set("content-type", "application/json")
                         .set("Authorization", "Bearer " + res.body.accessToken)
                         .end((err, res) => {
@@ -165,13 +171,13 @@ describe("Follow and unfollow", () => {
                 .post("/api/authenticate")
                 .set("content-type", "application/json")
                 .send({
-                    email: "hickey.public@xyz.com",
-                    password: "public",
+                    email: email,
+                    password: password,
                 })
                 .then((res) => {
                     chai
                         .request(server)
-                        .post("/api/unfollow/5")
+                        .post("/api/unfollow/" + idIndex)
                         .set("content-type", "application/json")
                         .set("Authorization", "Bearer " + res.body.accessToken)
                         .end((err, res) => {
@@ -199,13 +205,13 @@ describe("Follow and unfollow", () => {
                 .post("/api/authenticate")
                 .set("content-type", "application/json")
                 .send({
-                    email: "hickey.public@xyz.com",
-                    password: "public",
+                    email: email,
+                    password: password,
                 })
                 .then((res) => {
                     chai
                         .request(server)
-                        .post("/api/unfollow/5")
+                        .post("/api/unfollow/" + idIndex)
                         .set("content-type", "application/json")
                         .set("Authorization", "Bearer " + res.body.accessToken)
                         .end((err, res) => {
