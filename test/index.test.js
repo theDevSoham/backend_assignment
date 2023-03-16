@@ -11,6 +11,9 @@ const email = creds[idIndex - 2].email;
 const password = creds[idIndex - 2].password;
 const wrongPassword = "12345";
 
+const email_of_getUser = creds[0].email;
+const password_of_getUser = creds[0].password;
+
 chai.should();
 
 chai.use(chaiHttp);
@@ -225,6 +228,76 @@ describe("Follow and unfollow", () => {
                                 .with.equal("Not following");
                             done();
                         });
+                });
+        });
+    });
+});
+
+describe("Get Authenticated User details", () => {
+
+    /**
+     * Test the Get user details route
+     */
+
+    describe("Get user", () => {
+        /**
+         * Test the get authenticated user
+         */
+        it("should return a 200 response", (done) => {
+            chai
+                .request(server)
+                .post("/api/authenticate")
+                .set("content-type", "application/json")
+                .send({
+                    email: email_of_getUser,
+                    password: password_of_getUser,
+                })
+                .then((res) => {
+                    chai
+                        .request(server)
+                        .get("/api/user")
+                        .set("content-type", "application/json")
+                        .set("Authorization", "Bearer " + res.body.accessToken)
+                        .end((err, res) => {
+                            if (err) {
+                                done(err);
+                            }
+                            res.should.have.status(200);
+                            res.body.should.be.a("object");
+                            expect(res.body)
+                                .to.have.property("username")
+                                .with.equal("John Doe");
+                            expect(res.body)
+                                .to.have.property("followers")
+                                .with.equal(1);
+                            expect(res.body)
+                                .to.have.property("following")
+                                .with.equal(2);
+                            done();
+                        });
+                });
+        });
+    });
+
+    describe("Get unauthenticated user without any bearer", () => {
+        /**
+         * Test the get unauthenticated user without any bearer
+         */
+        it("should return a 401 response", (done) => {
+            chai
+                .request(server)
+                .get("/api/user")
+                .set("content-type", "application/json")
+                .end((err, res) => {
+                    if (err) {
+                        done(err);
+                    }
+                    res.should.have.status(401);
+                    res.body.should.be.a("object");
+                    expect(res.body)
+                        .to.have.property("message")
+                        .with.equal("Unauthenticated");
+                    done();
                 });
         });
     });
