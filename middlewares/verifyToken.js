@@ -3,7 +3,7 @@ const { JWT_KEY } = process.env;
 const userSchema = require('../models/UsersModel');
 
 const verifyToken = (req, res, next) => {
-    const { accessToken } = req.body;
+    const accessToken = req.headers.authorization.replace('Bearer ', '');
 
     if (!accessToken) {
         return res.status(401).json({ message: 'Unauthenticated' });
