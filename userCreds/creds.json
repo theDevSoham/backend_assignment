@@ -1,0 +1,26 @@
+[{
+        "name": "John Doe",
+        "email": "john123@xyz.com",
+        "password": "pass123"
+    },
+    {
+        "name": "Jane King",
+        "email": "janeking300@xyz.com",
+        "password": "pass256"
+    },
+    {
+        "name": "Hillary Clinton",
+        "email": "clinton.wins@xyz.com",
+        "password": "president"
+    },
+    {
+        "name": "James Hickey",
+        "email": "hickey.public@xyz.com",
+        "password": "public"
+    },
+    {
+        "name": "Ajay Das",
+        "email": "dasa@xyz.com",
+        "password": "invincibleajay"
+    }
+]

@@ -1,15 +1,37 @@
 const express = require('express');
+const userModel = require('../../models/UsersModel');
+const bcrypt = require('bcrypt');
 
 const router = express.Router();
 
-router.post('/api/authenticate', (req, res) => {
-    const { username, password } = req.body;
+router.post('/api/authenticate', async(req, res) => {
+    const { email, password } = req.body;
 
-    if (!username || !password) {
+    if (!email || !password) {
         return res.status(400).json({ message: 'Username and password are required' });
     }
 
-    res.status(200).json({ message: 'Success' });
+    try {
+        const user = await userModel.find({ email });
+        const serverPass = user[0].password;
+
+        if (user.length === 0) {
+            return res.status(400).json({ message: 'User not found' });
+        } else {
+            bcrypt.compare(password, serverPass, (err, result) => {
+                if (err) {
+                    return res.status(500).json({ message: 'Internal server error' });
+                } else if (result) {
+                    return res.status(200).json({ message: 'Authentication successful' });
+                } else {
+                    return res.status(401).json({ message: 'Authentication failed' });
+                }
+            });
+        }
+
+    } catch (err) {
+        return res.status(500).json({ message: 'Internal server error' });
+    }
 });
 
 module.exports = router;
