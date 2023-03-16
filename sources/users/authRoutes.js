@@ -18,6 +18,10 @@ const getJWT = (user) => {
     return token;
 };
 
+router.get('/', (req, res) => {
+    res.status(200).send('Authentication route');
+});
+
 router.post('/api/authenticate', async(req, res) => {
     const { email, password } = req.body;
 

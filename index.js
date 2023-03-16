@@ -22,6 +22,6 @@ const userRoutes = require("./sources/users/authRoutes");
 
 app.use("/", userRoutes);
 
-app.listen(port, () => {
+module.exports = app.listen(port, () => {
     console.log("Server started on port ", port);
 });
