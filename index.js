@@ -18,9 +18,11 @@ mongoose
     .catch((err) => console.log(err));
 
 // Routes
-const userRoutes = require("./sources/users/authRoutes");
+const authRoutes = require("./sources/users/authRoutes");
+const userRoutes = require("./sources/users/userRoutes");
 const followRoutes = require("./sources/interactions/followRequest");
 
+app.use("/", authRoutes);
 app.use("/", userRoutes);
 app.use("/", followRoutes);
 
