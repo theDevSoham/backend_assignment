@@ -21,10 +21,12 @@ mongoose
 const authRoutes = require("./sources/users/authRoutes");
 const userRoutes = require("./sources/users/userRoutes");
 const followRoutes = require("./sources/interactions/followRequest");
+const postRoutes = require("./sources/posts/postRoutes");
 
 app.use("/", authRoutes);
 app.use("/", userRoutes);
 app.use("/", followRoutes);
+app.use("/", postRoutes);
 
 module.exports = app.listen(port, () => {
     console.log("Server started on port ", port);
