@@ -20,8 +20,11 @@ const getFollowers = async(userId) => {
 };
 
 const getFollowing = async(userId) => {
-    const following = (await followModel.find({ user: userId }))[0].following.length;
-    return following;
+    const following = (await followModel.find({ user: userId }))[0];
+    if (typeof following === "undefined") {
+        return 0;
+    }
+    return following.following.length;
 };
 
 module.exports = { getFollowers, getFollowing };

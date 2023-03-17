@@ -7,7 +7,7 @@ const {
     CommentModel,
 } = require("../../models/PostsModel");
 const mongoose = require("mongoose");
-const { getNumberofLikes, getNumberOfComments } = require("../../helpers/postsInteractions");
+const { getNumberofLikes, getNumberOfComments, getAllComments } = require("../../helpers/postsInteractions");
 
 const router = express.Router();
 
@@ -230,6 +230,36 @@ router.get('/api/posts/:id', verifyToken, async(req, res) => {
     };
 
     res.status(200).json({ post: postDetails });
+});
+
+router.get('/api/all_posts', verifyToken, async(req, res) => {
+
+    const user = res.locals.user;
+
+    const posts = await PostModel.find({ user_id: user._id });
+
+    if (posts.length === 0) {
+        return res.status(204).json({ error: "No posts by you yet" });
+    }
+
+    const postsDetails = [];
+
+    for (let i = 0; i < posts.length; i++) {
+
+        const postObj = {
+            post_id: posts[i]._id,
+            title: posts[i].post.title,
+            desc: posts[i].post.description,
+            created_at: posts[i].date_created,
+            comments: await getAllComments(posts[i]._id),
+            likes: await getNumberofLikes(posts[i]._id),
+        }
+
+        postsDetails.push(postObj);
+    }
+
+    res.status(200).json({ posts: postsDetails });
+
 });
 
 module.exports = router;
