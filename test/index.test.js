@@ -324,7 +324,8 @@ describe("Add a new Post for authenticated user", () => {
                     email: email,
                     password: password,
                 })
-                .then((res) => {
+                .then(async(res) => {
+                    const postCount = await PostModel.countDocuments();
                     chai
                         .request(server)
                         .post("/api/posts")
@@ -334,7 +335,8 @@ describe("Add a new Post for authenticated user", () => {
                             title: "New Post",
                             description: "This is a new post for test purpose",
                         })
-                        .end((err, res) => {
+                        .end(async(err, res) => {
+                            const count = await PostModel.countDocuments();
                             if (err) {
                                 done(err);
                             }
@@ -349,7 +351,9 @@ describe("Add a new Post for authenticated user", () => {
                                 .to.have.property("description")
                                 .with.equal("This is a new post for test purpose");
                             expect(res.body)
-                                .to.have.property("created_at")
+                                .to.have.property("created_at");
+                            expect(postCount)
+                                .to.be.lessThan(count);
                             done();
                         });
                 });
