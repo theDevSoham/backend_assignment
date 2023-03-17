@@ -51,4 +51,32 @@ router.post("/api/posts", verifyToken, async(req, res) => {
     });
 });
 
+router.delete("/api/posts/:id", verifyToken, async(req, res) => {
+    const user = res.locals.user;
+
+    const { id } = req.params;
+
+    try {
+        const post = await PostModel.find({ _id: id });
+
+        if (post.length === 0) {
+            return res.status(400).json({ error: "Post not found" });
+        };
+
+        if (post[0].user_id.toString() !== user._id.toString()) {
+            return res.status(400).json({ error: "You are not the owner of this post" });
+        } else {
+
+            const deletedPost = await PostModel.findOneAndDelete({ _id: id })
+
+            return res.status(200).json({ message: "Post deleted", post: deletedPost });
+        }
+    } catch (error) {
+
+    }
+
+    console.log(id);
+    res.send("ok");
+});
+
 module.exports = router;
