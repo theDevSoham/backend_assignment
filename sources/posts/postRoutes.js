@@ -98,27 +98,28 @@ router.post("/api/like/:id", verifyToken, async(req, res) => {
     const { id } = req.params;
 
     try {
-        const post = await LikesModel.findOne({ post_id: id });
+        const post = await PostModel.findOne({ _id: id });
 
         if (!post) {
             return res.status(400).json({ error: "Post not found" });
         }
 
-        if (post.liked_by.includes(user._id)) {
+        const dislikes = await DislikesModel.findOne({ post_id: id });
+        const likes = await LikesModel.findOne({ post_id: id });
+
+        if (likes.liked_by.includes(user._id)) {
             return res.status(400).json({ error: "You already liked this post" });
         }
 
-        if (
-            (await DislikesModel.findOne({ post_id: id })).disliked_by.includes(
-                user._id
-            )
-        ) {
-            DislikesModel.updateOne({ post_id: id }, { $pull: { disliked_by: user._id } });
+        if (dislikes.disliked_by.includes(user._id)) {
+            const index = dislikes.disliked_by.indexOf(user._id);
+            dislikes.disliked_by.splice(index, 1);
+            const dislikesOfPost = await DislikesModel.updateOne({ post_id: id }, { disliked_by: dislikes.disliked_by });
         }
 
         const liked = await LikesModel.updateOne({ post_id: id }, { $push: { liked_by: user._id } });
 
-        res.status(200).json({ message: "Post liked" });
+        res.status(200).json({ message: "Post liked", liked });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
@@ -130,25 +131,28 @@ router.post("/api/unlike/:id", verifyToken, async(req, res) => {
     const { id } = req.params;
 
     try {
-        const post = await DislikesModel.findOne({ post_id: id });
+        const post = await PostModel.findOne({ _id: id });
 
         if (!post) {
             return res.status(400).json({ error: "Post not found" });
         }
 
-        if (post.disliked_by.includes(user._id)) {
+        const dislikes = await DislikesModel.findOne({ post_id: id });
+        const likes = await LikesModel.findOne({ post_id: id });
+
+        if (dislikes.disliked_by.includes(user._id)) {
             return res.status(400).json({ error: "You already unliked this post" });
         }
 
-        if (
-            (await LikesModel.findOne({ post_id: id })).liked_by.includes(user._id)
-        ) {
-            LikesModel.updateOne({ post_id: id }, { $pull: { liked_by: user._id } });
+        if (likes.liked_by.includes(user._id)) {
+            const index = likes.liked_by.indexOf(user._id);
+            likes.liked_by.splice(index, 1);
+            const likesOfPost = await LikesModel.updateOne({ post_id: id }, { liked_by: likes.liked_by });
         }
 
         const unliked = await DislikesModel.updateOne({ post_id: id }, { $push: { disliked_by: user._id } });
 
-        res.status(200).json({ message: "Post unliked" });
+        res.status(200).json({ message: "Post unliked", unliked });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
