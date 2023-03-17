@@ -81,11 +81,17 @@ router.delete("/api/posts/:id", verifyToken, async(req, res) => {
                 .status(400)
                 .json({ error: "You are not the owner of this post" });
         } else {
-            const deletedPost = await PostModel.findOneAndDelete({ _id: id });
 
-            return res
-                .status(200)
-                .json({ message: "Post deleted", post: deletedPost.post });
+            Promise.all([
+                LikesModel.findOneAndDelete({ post_id: id }),
+                DislikesModel.findOneAndDelete({ post_id: id }),
+                CommentModel.findOneAndDelete({ post_id: id }),
+            ]).then(async(values) => {
+                const deletedPost = await PostModel.findOneAndDelete({ _id: id });
+                return res
+                    .status(200)
+                    .json({ message: "Post deleted", post: deletedPost.post });
+            });
         }
     } catch (error) {
         return res.status(500).json({ error: error.message });
@@ -178,7 +184,15 @@ router.post("/api/comment/:id", verifyToken, async(req, res) => {
 
         const comment_id = new mongoose.Types.ObjectId();
 
-        CommentModel.updateOne({ post_id: id }, { $push: { comments: { user_id: user._id, comment: commentByUser, _id: comment_id } } })
+        CommentModel.updateOne({ post_id: id }, {
+                $push: {
+                    comments: {
+                        user_id: user._id,
+                        comment: commentByUser,
+                        _id: comment_id,
+                    },
+                },
+            })
             .then(async() => {
                 return res
                     .status(200)
