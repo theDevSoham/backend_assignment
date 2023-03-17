@@ -1,5 +1,5 @@
 const express = require('express');
-const { getFollowing, getFollowers } = require('../../middlewares/followerInteractions');
+const { getFollowing, getFollowers } = require('../../helpers/followerInteractions');
 const { verifyToken } = require('../../middlewares/verifyToken');
 
 const router = express.Router();
