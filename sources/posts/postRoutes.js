@@ -209,8 +209,6 @@ router.post("/api/comment/:id", verifyToken, async(req, res) => {
 
 router.get('/api/posts/:id', verifyToken, async(req, res) => {
 
-    const user = res.locals.user;
-
     const { id } = req.params;
 
     const post = await PostModel.findById(id);

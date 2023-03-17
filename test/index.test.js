@@ -767,3 +767,101 @@ describe("Comment on a post", () => {
         });
     });
 });
+
+describe("Get post", () => {
+    /**
+     * Get post 
+     */
+
+    describe("Get a post with id", () => {
+        /**
+         * Get a post with id
+         */
+
+        let accessToken = "";
+        let anotherUser = "";
+
+        before((done) => {
+            chai
+                .request(server)
+                .post("/api/authenticate")
+                .set("content-type", "application/json")
+                .send({
+                    email: email,
+                    password: password,
+                })
+                .end((err, res) => {
+                    if (err) {
+                        done(err);
+                    }
+                    accessToken = res.body.accessToken;
+                    done();
+                });
+        });
+
+        before((done) => {
+            chai
+                .request(server)
+                .post("/api/authenticate")
+                .set("content-type", "application/json")
+                .send({
+                    email: email_of_getUser,
+                    password: password_of_getUser,
+                })
+                .end((err, res) => {
+                    if (err) {
+                        done(err);
+                    }
+                    anotherUser = res.body.accessToken;
+                    done();
+                });
+        });
+
+        it("should return a 200 response", (done) => {
+            chai
+                .request(server)
+                .post("/api/posts")
+                .set("content-type", "application/json")
+                .set("Authorization", "Bearer " + accessToken)
+                .send({
+                    title: "New Post",
+                    description: "This is a new post for test purpose",
+                })
+                .then(res => {
+                    chai
+                        .request(server)
+                        .get("/api/posts/" + res.body.post_id)
+                        .set("content-type", "application/json")
+                        .set("Authorization", "Bearer " + anotherUser)
+                        .end((err, res) => {
+                            if (err) {
+                                done(err);
+                            }
+                            res.should.have.status(200);
+                            res.body.should.be.a("object");
+                            expect(res.body)
+                                .to.have.property("post")
+                                .with.property("title")
+                                .with.equal("New Post");
+                            expect(res.body)
+                                .to.have.property("post")
+                                .with.property("post_id");
+                            expect(res.body)
+                                .to.have.property("post")
+                                .with.property("description")
+                                .with.equal("This is a new post for test purpose");
+                            expect(res.body)
+                                .to.have.property("post")
+                                .with.property("created_at");
+                            expect(res.body)
+                                .to.have.property("post")
+                                .with.property("number_of_likes")
+                            expect(res.body)
+                                .to.have.property("post")
+                                .with.property("number_0f_comments")
+                            done();
+                        });
+                })
+        });
+    });
+});
