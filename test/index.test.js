@@ -403,3 +403,199 @@ describe("Add a new Post for authenticated user", () => {
         });
     });
 });
+
+describe("Delete new post", () => {
+    /**
+     * Delete a post
+     */
+
+    describe("Delete a post", () => {
+
+        /**
+         * Delete a post
+         **/
+
+        let accessToken = "";
+
+        before((done) => {
+            chai
+                .request(server)
+                .post("/api/authenticate")
+                .set("content-type", "application/json")
+                .send({
+                    email: email,
+                    password: password,
+                })
+                .end((err, res) => {
+                    if (err) {
+                        done(err);
+                    }
+                    accessToken = res.body.accessToken;
+                    done();
+                });
+        });
+
+        it("should return a 200 response", (done) => {
+
+            //console.log(accessToken);
+            chai
+                .request(server)
+                .post("/api/posts")
+                .set("content-type", "application/json")
+                .set("Authorization", "Bearer " + accessToken)
+                .send({
+                    title: "New Post",
+                    description: "This is a new post for test purpose",
+                })
+                .then(res => {
+                    chai
+                        .request(server)
+                        .delete("/api/posts/" + res.body.post_id)
+                        .set("content-type", "application/json")
+                        .set("Authorization", "Bearer " + accessToken)
+                        .end((err, res) => {
+                            if (err) {
+                                done(err);
+                            }
+                            res.should.have.status(200);
+                            res.body.should.be.a("object");
+                            expect(res.body)
+                                .to.have.property("message")
+                                .with.equal("Post deleted");
+                            done();
+                        });
+                })
+        });
+    });
+
+    describe("Delete a post that's not there originally", () => {
+
+        /**
+         * Delete a post that's not there originally
+         **/
+
+        let accessToken = "";
+
+        before((done) => {
+            chai
+                .request(server)
+                .post("/api/authenticate")
+                .set("content-type", "application/json")
+                .send({
+                    email: email,
+                    password: password,
+                })
+                .end((err, res) => {
+                    if (err) {
+                        done(err);
+                    }
+                    accessToken = res.body.accessToken;
+                    done();
+                });
+        });
+
+        it("should return a 500 response", (done) => {
+
+            //console.log(accessToken);
+            chai
+                .request(server)
+                .post("/api/posts")
+                .set("content-type", "application/json")
+                .set("Authorization", "Bearer " + accessToken)
+                .send({
+                    title: "New Post",
+                    description: "This is a new post for test purpose",
+                })
+                .then(res => {
+                    chai
+                        .request(server)
+                        .delete("/api/posts/" + "1")
+                        .set("content-type", "application/json")
+                        .set("Authorization", "Bearer " + accessToken)
+                        .end((err, res) => {
+                            if (err) {
+                                done(err);
+                            }
+                            res.should.have.status(500);
+                            done();
+                        });
+                })
+        });
+    });
+
+    describe("Delete a post with unauthorized user", () => {
+
+        /**
+         * Delete a post with unauthorized user
+         **/
+
+        let accessToken = "";
+        let differentAccessToken = "";
+
+        before((done) => {
+            chai
+                .request(server)
+                .post("/api/authenticate")
+                .set("content-type", "application/json")
+                .send({
+                    email: email,
+                    password: password,
+                })
+                .end((err, res) => {
+                    if (err) {
+                        done(err);
+                    }
+                    accessToken = res.body.accessToken;
+                    done();
+                });
+        });
+
+        before((done) => {
+            chai
+                .request(server)
+                .post("/api/authenticate")
+                .set("content-type", "application/json")
+                .send({
+                    email: email_of_getUser,
+                    password: password_of_getUser,
+                })
+                .end((err, res) => {
+                    if (err) {
+                        done(err);
+                    }
+                    differentAccessToken = res.body.accessToken;
+                    done();
+                });
+        });
+
+        it("should return a 400 response", (done) => {
+            chai
+                .request(server)
+                .post("/api/posts")
+                .set("content-type", "application/json")
+                .set("Authorization", "Bearer " + accessToken)
+                .send({
+                    title: "New Post",
+                    description: "This is a new post for test purpose",
+                })
+                .then(res => {
+                    chai
+                        .request(server)
+                        .delete("/api/posts/" + res.body.post_id)
+                        .set("content-type", "application/json")
+                        .set("Authorization", "Bearer " + differentAccessToken)
+                        .end((err, res) => {
+                            if (err) {
+                                done(err);
+                            }
+                            res.should.have.status(400);
+                            res.body.should.be.a("object");
+                            expect(res.body)
+                                .to.have.property("error")
+                                .with.equal("You are not the owner of this post");
+                            done();
+                        });
+                })
+        });
+    });
+});
