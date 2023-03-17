@@ -69,14 +69,11 @@ router.delete("/api/posts/:id", verifyToken, async(req, res) => {
 
             const deletedPost = await PostModel.findOneAndDelete({ _id: id })
 
-            return res.status(200).json({ message: "Post deleted", post: deletedPost });
+            return res.status(200).json({ message: "Post deleted", post: deletedPost.post });
         }
     } catch (error) {
-
+        return res.status(500).json({ error: error.message });
     }
-
-    console.log(id);
-    res.send("ok");
 });
 
 module.exports = router;
