@@ -599,3 +599,171 @@ describe("Delete new post", () => {
         });
     });
 });
+
+
+describe("Comment on a post", () => {
+    /**
+     * Comment on a post
+     */
+
+    describe("Comment on a new post", () => {
+
+        /**
+         * Comment on a new post
+         **/
+
+        let accessToken = "";
+        let anotherAccessToken = "";
+
+        before((done) => {
+            chai
+                .request(server)
+                .post("/api/authenticate")
+                .set("content-type", "application/json")
+                .send({
+                    email: email,
+                    password: password,
+                })
+                .end((err, res) => {
+                    if (err) {
+                        done(err);
+                    }
+                    accessToken = res.body.accessToken;
+                    done();
+                });
+        });
+
+        before((done) => {
+            chai
+                .request(server)
+                .post("/api/authenticate")
+                .set("content-type", "application/json")
+                .send({
+                    email: email_of_getUser,
+                    password: password_of_getUser,
+                })
+                .end((err, res) => {
+                    if (err) {
+                        done(err);
+                    }
+                    anotherAccessToken = res.body.accessToken;
+                    done();
+                });
+        });
+
+        it("should return a 200 response", (done) => {
+
+            //console.log(accessToken);
+            chai
+                .request(server)
+                .post("/api/posts")
+                .set("content-type", "application/json")
+                .set("Authorization", "Bearer " + accessToken)
+                .send({
+                    title: "New Post",
+                    description: "This is a new post for test purpose",
+                })
+                .then(res => {
+                    chai
+                        .request(server)
+                        .post("/api/comment/" + res.body.post_id)
+                        .set("content-type", "application/json")
+                        .set("Authorization", "Bearer " + anotherAccessToken)
+                        .send({
+                            comment: "This is a comment for test purpose",
+                        })
+                        .end((err, res) => {
+                            if (err) {
+                                done(err);
+                            }
+                            res.should.have.status(200);
+                            res.body.should.be.a("object");
+                            expect(res.body)
+                                .to.have.property("message")
+                                .with.equal("Comment added");
+                            expect(res.body)
+                                .to.have.property("commentId")
+                            done();
+                        });
+                })
+        });
+    });
+
+    describe("Comment on a new post without sending comment body", () => {
+
+        /**
+         * Comment on a new post without sending comment body
+         **/
+
+        let accessToken = "";
+        let anotherAccessToken = "";
+
+        before((done) => {
+            chai
+                .request(server)
+                .post("/api/authenticate")
+                .set("content-type", "application/json")
+                .send({
+                    email: email,
+                    password: password,
+                })
+                .end((err, res) => {
+                    if (err) {
+                        done(err);
+                    }
+                    accessToken = res.body.accessToken;
+                    done();
+                });
+        });
+
+        before((done) => {
+            chai
+                .request(server)
+                .post("/api/authenticate")
+                .set("content-type", "application/json")
+                .send({
+                    email: email_of_getUser,
+                    password: password_of_getUser,
+                })
+                .end((err, res) => {
+                    if (err) {
+                        done(err);
+                    }
+                    anotherAccessToken = res.body.accessToken;
+                    done();
+                });
+        });
+
+        it("should return a 400 response", (done) => {
+
+            //console.log(accessToken);
+            chai
+                .request(server)
+                .post("/api/posts")
+                .set("content-type", "application/json")
+                .set("Authorization", "Bearer " + accessToken)
+                .send({
+                    title: "New Post",
+                    description: "This is a new post for test purpose",
+                })
+                .then(res => {
+                    chai
+                        .request(server)
+                        .post("/api/comment/" + res.body.post_id)
+                        .set("content-type", "application/json")
+                        .set("Authorization", "Bearer " + anotherAccessToken)
+                        .end((err, res) => {
+                            if (err) {
+                                done(err);
+                            }
+                            res.should.have.status(400);
+                            res.body.should.be.a("object");
+                            expect(res.body)
+                                .to.have.property("error")
+                                .with.equal("Please fill all fields");
+                            done();
+                        });
+                })
+        });
+    });
+});
