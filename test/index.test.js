@@ -4,6 +4,7 @@ const chaiHttp = require("chai-http");
 const server = require("../index");
 const userModel = require("../models/UsersModel");
 const followModel = require("../models/FollowModel");
+const { PostModel } = require("../models/PostsModel");
 const creds = require("../userCreds/creds.json");
 
 const idIndex = creds.length;
@@ -298,6 +299,98 @@ describe("Get Authenticated User details", () => {
                         .to.have.property("message")
                         .with.equal("Unauthenticated");
                     done();
+                });
+        });
+    });
+});
+
+describe("Add a new Post for authenticated user", () => {
+    /**
+     * Test the new post for authenticated user
+     */
+
+    describe("Add a new post", () => {
+
+        /**
+         * Try add a new post
+         */
+
+        it("should return a 200 response", (done) => {
+            chai
+                .request(server)
+                .post("/api/authenticate")
+                .set("content-type", "application/json")
+                .send({
+                    email: email,
+                    password: password,
+                })
+                .then((res) => {
+                    chai
+                        .request(server)
+                        .post("/api/posts")
+                        .set("content-type", "application/json")
+                        .set("Authorization", "Bearer " + res.body.accessToken)
+                        .send({
+                            title: "New Post",
+                            description: "This is a new post for test purpose",
+                        })
+                        .end((err, res) => {
+                            if (err) {
+                                done(err);
+                            }
+                            res.should.have.status(200);
+                            res.body.should.be.a("object");
+                            expect(res.body)
+                                .to.have.property("post_id")
+                            expect(res.body)
+                                .to.have.property("title")
+                                .with.equal("New Post");
+                            expect(res.body)
+                                .to.have.property("description")
+                                .with.equal("This is a new post for test purpose");
+                            expect(res.body)
+                                .to.have.property("created_at")
+                            done();
+                        });
+                });
+        });
+    });
+
+    describe("Add a new post without title", () => {
+
+        /**
+         * Try add a new post without title
+         */
+
+        it("should return a 400 response", (done) => {
+            chai
+                .request(server)
+                .post("/api/authenticate")
+                .set("content-type", "application/json")
+                .send({
+                    email: email,
+                    password: password,
+                })
+                .then((res) => {
+                    chai
+                        .request(server)
+                        .post("/api/posts")
+                        .set("content-type", "application/json")
+                        .set("Authorization", "Bearer " + res.body.accessToken)
+                        .send({
+                            description: "This is a new post for test purpose",
+                        })
+                        .end((err, res) => {
+                            if (err) {
+                                done(err);
+                            }
+                            res.should.have.status(400);
+                            res.body.should.be.a("object");
+                            expect(res.body)
+                                .to.have.property("error")
+                                .with.equal("Please fill all fields");
+                            done();
+                        });
                 });
         });
     });
