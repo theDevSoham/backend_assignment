@@ -1,15 +1,17 @@
 const { expect } = require("chai");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
+const mongoose = require("mongoose");
 const server = require("../index");
 const userModel = require("../models/UsersModel");
 const followModel = require("../models/FollowModel");
-const { PostModel } = require("../models/PostsModel");
+const { PostModel, LikesModel, CommentModel, DislikesModel } = require("../models/PostsModel");
 const creds = require("../userCreds/creds.json");
 
 const idIndex = creds.length;
 const email = creds[idIndex - 2].email;
 const password = creds[idIndex - 2].password;
+const _id = creds[idIndex - 2]._id;
 const wrongPassword = "12345";
 
 const email_of_getUser = creds[0].email;
@@ -862,6 +864,84 @@ describe("Get post", () => {
                             done();
                         });
                 })
+        });
+    });
+
+    describe("Get all post with authenticated user", () => {
+        /**
+         * Get all post with authenticated user and without sending post id
+         */
+
+        let accessToken = "";
+
+        before((done) => {
+            PostModel.deleteMany({ user_id: _id });
+            LikesModel.deleteMany({ user_id: _id });
+            CommentModel.deleteMany({});
+            DislikesModel.deleteMany({ user_id: _id });
+
+            const post1 = new PostModel({
+                _id: new mongoose.Types.ObjectId(),
+                user_id: _id,
+                post: {
+                    title: "New Post 1",
+                    description: "This is a new post for test purpose 1",
+                },
+                date_created: new Date().toISOString(),
+            });
+
+            post1.save();
+
+            const post2 = new PostModel({
+                _id: new mongoose.Types.ObjectId(),
+                user_id: _id,
+                post: {
+                    title: "New Post 2",
+                    description: "This is a new post for test purpose 2",
+                },
+                date_created: new Date().toISOString(),
+            });
+
+            post2.save();
+            done();
+        })
+
+        before((done) => {
+            chai
+                .request(server)
+                .post("/api/authenticate")
+                .set("content-type", "application/json")
+                .send({
+                    email: email,
+                    password: password,
+                })
+                .end((err, res) => {
+                    if (err) {
+                        done(err);
+                    }
+                    accessToken = res.body.accessToken;
+                    done();
+                });
+        });
+
+        it("should return a 200 response", (done) => {
+            chai
+                .request(server)
+                .get("/api/all_posts")
+                .set("content-type", "application/json")
+                .set("Authorization", "Bearer " + accessToken)
+                .end((err, res) => {
+                    if (err) {
+                        done(err);
+                    }
+
+                    res.should.have.status(200);
+                    res.body.should.be.a("object");
+                    expect(res.body)
+                        .to.have.property("posts")
+                        .with.lengthOf(2);
+                    done();
+                });
         });
     });
 });
