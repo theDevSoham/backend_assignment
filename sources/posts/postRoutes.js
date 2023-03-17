@@ -7,6 +7,7 @@ const {
     CommentModel,
 } = require("../../models/PostsModel");
 const mongoose = require("mongoose");
+const { getNumberofLikes, getNumberOfComments } = require("../../helpers/postsInteractions");
 
 const router = express.Router();
 
@@ -204,6 +205,33 @@ router.post("/api/comment/:id", verifyToken, async(req, res) => {
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
+});
+
+router.get('/api/posts/:id', verifyToken, async(req, res) => {
+
+    const user = res.locals.user;
+
+    const { id } = req.params;
+
+    const post = await PostModel.findById(id);
+
+    if (!post) {
+        return res.status(400).json({ error: "Post not found" });
+    }
+
+    const likes = await getNumberofLikes(post._id);
+    const comments = await getNumberOfComments(post._id);
+
+    const postDetails = {
+        post_id: post._id,
+        title: post.post.title,
+        description: post.post.description,
+        created_at: post.date_created,
+        number_of_likes: likes,
+        number_0f_comments: comments,
+    };
+
+    res.status(200).json({ post: postDetails });
 });
 
 module.exports = router;
