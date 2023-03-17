@@ -1,0 +1,398 @@
+{
+	"info": {
+		"_postman_id": "d585ee07-86f1-4d83-aee4-fa19c503d33a",
+		"name": "Backend_Assignment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24589212"
+	},
+	"item": [
+		{
+			"name": "Get Initial Route",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local_backEnd_URL}}",
+					"host": [
+						"{{local_backEnd_URL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"dasa@xyz.com\",\r\n    \"password\": \"invincibleajay\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local_backEnd_URL}}/api/authenticate",
+					"host": [
+						"{{local_backEnd_URL}}"
+					],
+					"path": [
+						"api",
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Follow Request",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRhc2FAeHl6LmNvbSIsImlhdCI6MTY3ODk3NzY1NiwiZXhwIjoxNzEwNTEzNjU2fQ.Lu26nG2tnrU6iVLkSqjxFTabWwJ8vDauSF1bsWxSDqA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local_backEnd_URL}}/api/follow/4",
+					"host": [
+						"{{local_backEnd_URL}}"
+					],
+					"path": [
+						"api",
+						"follow",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Unfollow Request",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRhc2FAeHl6LmNvbSIsImlhdCI6MTY3ODk3NzY1NiwiZXhwIjoxNzEwNTEzNjU2fQ.Lu26nG2tnrU6iVLkSqjxFTabWwJ8vDauSF1bsWxSDqA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local_backEnd_URL}}/api/unfollow/4",
+					"host": [
+						"{{local_backEnd_URL}}"
+					],
+					"path": [
+						"api",
+						"unfollow",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImpvaG4xMjNAeHl6LmNvbSIsImlhdCI6MTY3ODk4NzI3MCwiZXhwIjoxNzEwNTIzMjcwfQ.HrC67VcbdiOPcY0o7dpLy9PuLtQlVIswvWD48H2R2Wk",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Lol\",\r\n    \"password\": \"12345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local_backEnd_URL}}/api/user",
+					"host": [
+						"{{local_backEnd_URL}}"
+					],
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImphbmVraW5nMzAwQHh5ei5jb20iLCJpYXQiOjE2NzkwMzczNjksImV4cCI6MTcxMDU3MzM2OX0.1xOjaKOd0go2Nts_ISPnrIjy_5fA2Dvb6GfRyYFQGPw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Lol\",\r\n    \"description\": \"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Soluta, voluptatem sed. Omnis, tenetur, placeat quod magni eaque voluptates animi sequi, praesentium nulla illum exercitationem quisquam. Expedita obcaecati inventore esse provident unde fugit eaque repellendus, qui nam rem deleniti iste sapiente voluptates possimus modi fugiat hic iusto, beatae, minima totam nemo? Dignissimos itaque velit molestias odit saepe beatae pariatur obcaecati! Ex, quod? Facere eveniet delectus ipsa error quae labore adipisci reprehenderit temporibus aperiam placeat. Maxime, sapiente. Odit dolores maxime autem maiores dignissimos delectus esse eligendi, minus aut vero ab, odio, blanditiis eaque minima dicta deserunt. Consequatur voluptas quibusdam ratione ab blanditiis?\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local_backEnd_URL}}/api/posts",
+					"host": [
+						"{{local_backEnd_URL}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Post",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImhpY2tleS5wdWJsaWNAeHl6LmNvbSIsImlhdCI6MTY3OTA1MTU3NywiZXhwIjoxNzEwNTg3NTc3fQ.5PTYIjRu31cm4olDgDEeFtBezWHMDzTIdi-aG3ybKKY",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Lol\",\r\n    \"password\": \"12345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local_backEnd_URL}}/api/posts/64141c12a17bfb31144a9edd",
+					"host": [
+						"{{local_backEnd_URL}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"64141c12a17bfb31144a9edd"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Like Post",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImphbmVraW5nMzAwQHh5ei5jb20iLCJpYXQiOjE2NzkwMzczNjksImV4cCI6MTcxMDU3MzM2OX0.1xOjaKOd0go2Nts_ISPnrIjy_5fA2Dvb6GfRyYFQGPw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local_backEnd_URL}}/api/like/64141588125c304103d74d89",
+					"host": [
+						"{{local_backEnd_URL}}"
+					],
+					"path": [
+						"api",
+						"like",
+						"64141588125c304103d74d89"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Unlike Post",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImphbmVraW5nMzAwQHh5ei5jb20iLCJpYXQiOjE2NzkwMzczNjksImV4cCI6MTcxMDU3MzM2OX0.1xOjaKOd0go2Nts_ISPnrIjy_5fA2Dvb6GfRyYFQGPw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local_backEnd_URL}}/api/like/64141588125c304103d74d89",
+					"host": [
+						"{{local_backEnd_URL}}"
+					],
+					"path": [
+						"api",
+						"like",
+						"64141588125c304103d74d89"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImphbmVraW5nMzAwQHh5ei5jb20iLCJpYXQiOjE2NzkwMzczNjksImV4cCI6MTcxMDU3MzM2OX0.1xOjaKOd0go2Nts_ISPnrIjy_5fA2Dvb6GfRyYFQGPw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local_backEnd_URL}}/api/like/64141588125c304103d74d89",
+					"host": [
+						"{{local_backEnd_URL}}"
+					],
+					"path": [
+						"api",
+						"like",
+						"64141588125c304103d74d89"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Post",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImphbmVraW5nMzAwQHh5ei5jb20iLCJpYXQiOjE2NzkwMzczNjksImV4cCI6MTcxMDU3MzM2OX0.1xOjaKOd0go2Nts_ISPnrIjy_5fA2Dvb6GfRyYFQGPw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local_backEnd_URL}}/api/like/64141588125c304103d74d89",
+					"host": [
+						"{{local_backEnd_URL}}"
+					],
+					"path": [
+						"api",
+						"like",
+						"64141588125c304103d74d89"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Posts",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImphbmVraW5nMzAwQHh5ei5jb20iLCJpYXQiOjE2NzkwMzczNjksImV4cCI6MTcxMDU3MzM2OX0.1xOjaKOd0go2Nts_ISPnrIjy_5fA2Dvb6GfRyYFQGPw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local_backEnd_URL}}/api/like/64141588125c304103d74d89",
+					"host": [
+						"{{local_backEnd_URL}}"
+					],
+					"path": [
+						"api",
+						"like",
+						"64141588125c304103d74d89"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
