@@ -24,12 +24,24 @@ const DislikesSchema = new mongoose.Schema({
     disliked_by: Array.of(mongoose.Schema.Types.ObjectId),
 });
 
+const CommentsSchema = new mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
+    post_id: mongoose.Schema.Types.ObjectId,
+    comments: Array.of({
+        user_id: mongoose.Schema.Types.ObjectId,
+        comment: String,
+        _id: mongoose.Schema.Types.ObjectId,
+    }),
+});
+
 const PostModel = mongoose.model('posts', PostsSchema);
 const LikesModel = mongoose.model('liked_posts', LikesSchema);
 const DislikesModel = mongoose.model('disliked_posts', DislikesSchema);
+const CommentModel = mongoose.model('comments', CommentsSchema);
 
 module.exports = {
     PostModel,
     LikesModel,
     DislikesModel,
+    CommentModel,
 }
