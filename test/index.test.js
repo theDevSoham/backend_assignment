@@ -363,6 +363,7 @@ describe("Add a new Post for authenticated user", () => {
          */
 
         it("should return a 400 response", (done) => {
+
             chai
                 .request(server)
                 .post("/api/authenticate")
@@ -371,7 +372,8 @@ describe("Add a new Post for authenticated user", () => {
                     email: email,
                     password: password,
                 })
-                .then((res) => {
+                .then(async(res) => {
+                    const postCount = await PostModel.countDocuments();
                     chai
                         .request(server)
                         .post("/api/posts")
@@ -380,7 +382,8 @@ describe("Add a new Post for authenticated user", () => {
                         .send({
                             description: "This is a new post for test purpose",
                         })
-                        .end((err, res) => {
+                        .end(async(err, res) => {
+                            const count = await PostModel.countDocuments();
                             if (err) {
                                 done(err);
                             }
@@ -389,6 +392,7 @@ describe("Add a new Post for authenticated user", () => {
                             expect(res.body)
                                 .to.have.property("error")
                                 .with.equal("Please fill all fields");
+                            expect(count).to.equal(postCount);
                             done();
                         });
                 });
