@@ -11,7 +11,6 @@ const creds = require("../userCreds/creds.json");
 const idIndex = creds.length;
 const email = creds[idIndex - 2].email;
 const password = creds[idIndex - 2].password;
-const _id = creds[idIndex - 2]._id;
 const wrongPassword = "12345";
 
 const email_of_getUser = creds[0].email;
@@ -875,35 +874,94 @@ describe("Get post", () => {
         let accessToken = "";
 
         before((done) => {
-            PostModel.deleteMany({ user_id: _id });
-            LikesModel.deleteMany({ user_id: _id });
-            CommentModel.deleteMany({});
-            DislikesModel.deleteMany({ user_id: _id });
 
-            const post1 = new PostModel({
-                _id: new mongoose.Types.ObjectId(),
-                user_id: _id,
-                post: {
-                    title: "New Post 1",
-                    description: "This is a new post for test purpose 1",
-                },
-                date_created: new Date().toISOString(),
+            Promise.all([
+                PostModel.collection.drop(),
+                LikesModel.collection.drop(),
+                CommentModel.collection.drop(),
+                DislikesModel.collection.drop(),
+            ]).then(async() => {
+                const _id = (await userModel.findOne({ email: email }))._id;
+                const post1_id = new mongoose.Types.ObjectId();
+                const post2_id = new mongoose.Types.ObjectId();
+
+                const post1 = new PostModel({
+                    _id: post1_id,
+                    user_id: _id,
+                    post: {
+                        title: "New Post 1",
+                        description: "This is a new post for test purpose 1",
+                    },
+                    date_created: new Date().toISOString(),
+                });
+
+                const likes1 = new LikesModel({
+                    _id: new mongoose.Types.ObjectId(),
+                    user_id: _id,
+                    post_id: post1_id,
+                    liked_by: [],
+                });
+
+                const dislikes1 = new DislikesModel({
+                    _id: new mongoose.Types.ObjectId(),
+                    user_id: _id,
+                    post_id: post1_id,
+                    disliked_by: [],
+                });
+
+                const comments1 = new CommentModel({
+                    _id: new mongoose.Types.ObjectId(),
+                    post_id: post1_id,
+                    comments: [],
+                });
+
+                const post2 = new PostModel({
+                    _id: post2_id,
+                    user_id: _id,
+                    post: {
+                        title: "New Post 2",
+                        description: "This is a new post for test purpose 2",
+                    },
+                    date_created: new Date().toISOString(),
+                });
+
+                const likes2 = new LikesModel({
+                    _id: new mongoose.Types.ObjectId(),
+                    user_id: _id,
+                    post_id: post2_id,
+                    liked_by: [],
+                });
+
+                const dislikes2 = new DislikesModel({
+                    _id: new mongoose.Types.ObjectId(),
+                    user_id: _id,
+                    post_id: post2_id,
+                    disliked_by: [],
+                });
+
+                const comments2 = new CommentModel({
+                    _id: new mongoose.Types.ObjectId(),
+                    post_id: post2_id,
+                    comments: [],
+                });
+
+                Promise.all([
+                    post1.save(),
+                    likes1.save(),
+                    dislikes1.save(),
+                    comments1.save(),
+                    post2.save(),
+                    likes2.save(),
+                    dislikes2.save(),
+                    comments2.save(),
+                ]).then(() => {
+                    done();
+                }).catch(err => {
+                    done(err);
+                });
+            }).catch(err => {
+                done(err);
             });
-
-            post1.save();
-
-            const post2 = new PostModel({
-                _id: new mongoose.Types.ObjectId(),
-                user_id: _id,
-                post: {
-                    title: "New Post 2",
-                    description: "This is a new post for test purpose 2",
-                },
-                date_created: new Date().toISOString(),
-            });
-
-            post2.save();
-            done();
         })
 
         before((done) => {
