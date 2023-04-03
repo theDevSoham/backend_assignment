@@ -8,7 +8,7 @@ A test given by Reunion co. for Backend Developer Position. The following app is
 
 #### Login
 
-```http
+```bash
   POST /api/authenticate
 ```
 
@@ -22,7 +22,7 @@ Returns JWT token
 
 #### Follow Request
 
-```http
+```bash
   POST /api/follow/{id}
 ```
 
@@ -34,7 +34,7 @@ Authenticated user would follow user with {id}
 
 #### Unfollow Request
 
-```http
+```bash
   POST /api/unfollow/{id}
 ```
 
@@ -46,7 +46,7 @@ Authenticated user would unfollow user with {id}
 
 #### Get Authenticated User
 
-```http
+```bash
   GET /api/user
 ```
 
@@ -58,7 +58,7 @@ Returns User Name, number of followers & followings.
 
 #### Add a new post created by the authenticated user.
 
-```http
+```bash
   POST /api/posts/
 ```
 
@@ -75,7 +75,7 @@ Return Post-ID, Title, Description, Created Time(UTC).
 
 #### Delete Post
 
-```http
+```bash
   DELETE /api/posts/{id}
 ```
 
@@ -87,7 +87,7 @@ Delete post with {id} created by the authenticated user.
 
 #### Like a post
 
-```http
+```bash
   POST /api/like/{id}
 ```
 
@@ -99,7 +99,7 @@ Like the post with {id} by the authenticated user.
 
 #### Unlike a post
 
-```http
+```bash
   POST /api/unlike/{id}
 ```
 
@@ -111,7 +111,7 @@ Unlike the post with {id} by the authenticated user.
 
 #### Add a comment
 
-```http
+```bash
   POST /api/comment/{id}
 ```
 
@@ -127,7 +127,7 @@ Add comment for post with {id} by the authenticated user. Returns Comment-ID.
 
 #### Return a single post
 
-```http
+```bash
   GET /api/posts/{id}
 ```
 
@@ -140,7 +140,7 @@ Returns a single post with {id} populated with its number of likes and comments.
 
 #### Return all posts
 
-```http
+```bash
   GET /api/all_posts
 ```
 
