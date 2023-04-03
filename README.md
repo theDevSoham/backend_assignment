@@ -3,6 +3,8 @@
 
 A test given by Reunion co. for Backend Developer Position. The following app is a Social media backend mockup, where different api endpoints are exposed for various user actions. 
 
+### Note: User Registration is not allowed as per the [documentation](https://reunion-one.notion.site/Back-End-Assignment-REUNION-bd5e48b7aab54e91b6ee8829c3e30c4a)
+
 
 ## API Reference
 
