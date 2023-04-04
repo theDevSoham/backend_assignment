@@ -161,12 +161,6 @@ Returns a single post with {id} populated with its number of likes and comments.
 
 
 
-## Pre integrated Users
-
-The users that are already pre registered can be found inside the `userCreds/creds.json` file
-
-
-
 ## Installation
 
 Install this project with git clone [repo_link](https://github.com/theDevSoham/backend_assignment.git)
@@ -191,6 +185,11 @@ To run tests, run the following command
 ```bash
   npm run test
 ```
+
+
+## Pre integrated Users
+
+The users that are already pre registered can be found inside the `userCreds/creds.json` file
 
 
 ## Deployed link
