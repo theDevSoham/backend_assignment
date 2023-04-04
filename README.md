@@ -189,7 +189,7 @@ To run tests, run the following command
 
 ## Pre integrated Users
 
-The users that are already pre registered can be found inside the `userCreds/creds.json` file
+The users that are already pre registered can be found inside the `userCreds/creds.json` file. You can get an idea of the file structure or use the file instead to upload to mongo db. Please use the same `JWT KEY` for hashing and checking password
 
 
 ## Deployed link
