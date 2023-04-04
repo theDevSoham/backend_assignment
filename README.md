@@ -161,6 +161,10 @@ Returns a single post with {id} populated with its number of likes and comments.
 
 
 
+## Pre integrated Users
+
+The users that are already pre registered can be found inside the `userCreds/creds.json` file
+
 
 
 ## Installation
